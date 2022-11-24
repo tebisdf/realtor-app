@@ -18,7 +18,7 @@ export default function Header() {
             alt="logo"
             className="h-4 cursor-pointer"
             onClick={()=>navigate("/")}
-
+ 
           />
         </div>
         <div>
