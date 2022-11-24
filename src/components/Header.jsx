@@ -1,20 +1,54 @@
+import { useLocation,useNavigate } from "react-router-dom";
 import React from "react";
 export default function Header() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  console.log(location.pathname);
+  function pathMatchRouter(route) {
+    if (route === location.pathname) {
+      return true;
+    }
+  }
   return (
-    <div>
-      <header className="flex justify-between items-center px-3 max-w-6xl">
-      <div>
-          <img  
+    <div className="bg-white shadow-sm border-b sticky top-0 z-50">
+      <header className="flex justify-between items-center px-3 max-w-6xl mx-3">
+        <div>
+          <img
             src="https://static.rdc.moveaws.com/images/logos/rdc-logo-default.svg"
             alt="logo"
-            className="h-4 cursor-pointer bg-blue-800"
+            className="h-4 cursor-pointer"
+            onClick={()=>navigate("/")}
+
           />
         </div>
         <div>
-          <ul className="">
-            <li>Home</li>
-            <li>Offers</li>
-            <li>Sign in</li>
+          <ul className="flex space-x-3">
+            <li
+              className={`cursor-pointer py-3 text-sm font-semibold
+               text-gray-400 border-b-[3px] 
+               border-b-transparent ${
+                 pathMatchRouter("/") && "text-black border-b-red-500"
+               }`}
+               onClick={()=>navigate("/")}
+            >
+              Home
+            </li>
+            <li
+            className={`cursor-pointer py-3 text-sm font-semibold
+            text-gray-400 border-b-[3px] 
+            border-b-transparent ${
+              pathMatchRouter("/offers") && "text-black border-b-red-500"
+            }`}
+            onClick={()=>navigate("/offers")}
+            >Offers</li>
+            <li
+            className={`cursor-pointer py-3 text-sm font-semibold
+            text-gray-400 border-b-[3px] 
+            border-b-transparent ${
+              pathMatchRouter("/sign-in") && "text-black border-b-red-500"
+            }`}
+            onClick={()=>navigate("/sign-in")}
+            >Sign in</li>
           </ul>
         </div>
       </header>
