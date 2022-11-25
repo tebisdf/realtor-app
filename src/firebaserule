@@ -1,0 +1,72 @@
+Skip to content
+Product
+Solutions
+Open Source
+Pricing
+Search
+Sign in
+Sign up
+harsh0620
+/
+realtor
+Public
+Code
+Issues
+Pull requests
+Actions
+Projects
+Security
+Insights
+realtor/firebaseRules.txt
+@harsh0620
+harsh0620 Firebase and react-toastify Config with user singup completed
+Latest commit 3f68b61 23 days ago
+ History
+ 1 contributor
+46 lines (32 sloc)  866 Bytes
+
+
+    // Firestore rules
+
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Listings
+    match /listings/{listing} {
+    	allow read;
+      allow create: if request.auth != null && request.resource.data.imgUrls.size() < 7;
+    	allow delete: if resource.data.userRef == request.auth.uid;
+      allow update: if resource.data.userRef == request.auth.uid;
+    }
+   
+    // Users
+    match /users/{user} {
+    	allow read;
+    	allow create;
+    	allow update: if request.auth.uid == user
+    }
+  }
+}
+
+
+    // Storage rules
+
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read;
+      allow write: if
+      request.auth != null &&
+      request.resource.size < 2 * 1024 * 1024 && //2MB
+      request.resource.contentType.matches('image/.*')
+    }
+  }
+}
+
+
+
+
+
