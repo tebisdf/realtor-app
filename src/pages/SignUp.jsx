@@ -1,24 +1,58 @@
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  updateProfile,
+} from "firebase/auth";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { useState } from "react";
-import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import OAuth from "../components/OAuth";
-
+import { db } from "../firebase";
+import { toast, Toast } from "react-toastify";
+import { async } from "@firebase/util";
 export default function SignUp() {
   //another hook for password
   const [showPassword, setShowPassword] = useState(false); //the false is the initial value
   // create a formData hook
   const [formData, setFormData] = useState({
-    name:"",
+    name: "",
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
   // get info from formData
-  const { name,email, password } = formData;
+  const { name, email, password } = formData;
   function onChange(e) {
     setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
     }));
+  }
+  async function onSubmit(e) {
+    e.preventDefault();
+    const auth = getAuth();
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      updateProfile(auth.currentUser, {
+        displayName: name, //to add other information on the firebas
+      });
+      const user = userCredential.user;
+      //saveing information except password about the user in our application
+      const formDataCopy = { ...formData };
+      delete formDataCopy.password;
+      formDataCopy.timestamp = serverTimestamp();
+      await setDoc(doc(db, "users", user.uid), formDataCopy);
+      toast.success("User Created successfully");
+      navigate("/");
+    } catch (error) {
+      toast.error("Something went wrong with the Registration");
+    }
   }
   return (
     <section>
@@ -32,7 +66,7 @@ export default function SignUp() {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-6">
-          <form action="">
+          <form onSubmit={onSubmit}>
             <input
               type="text"
               id="name"
@@ -80,7 +114,7 @@ export default function SignUp() {
                   to="/sign-in"
                   className="text-red-600 hover:text-red-700 transition duration-200 ease-in-out ml-1"
                 >
-                  Sign Up
+                  Sign In
                 </Link>
               </p>
               <p>
