@@ -1,7 +1,7 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import OAuth from "../components/OAuth";
 export default function SignIn() {
@@ -23,7 +23,6 @@ export default function SignIn() {
   }
   //to authenticate user
   async function onSubmit(e) {
-   console.log("saving elmeent")
    e.preventDefault();
    try {
      const auth = getAuth();
