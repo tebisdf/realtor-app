@@ -14,8 +14,8 @@ export default function ForgetPassword() {
     e.preventDefault();
     try {
       const auth = getAuth();
-      await sendPasswordResetEmail(auth,email)
-      toast.success("Email was sent")
+      await sendPasswordResetEmail(auth, email);
+      toast.success("Email was sent");
     } catch (error) {
       toast.error("Could not send Reset Password");
     }
@@ -62,7 +62,9 @@ export default function ForgetPassword() {
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800"
+              className="w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase rounded 
+              shadow-md hover:bg-blue-700 transition duration-150 ease-in-out
+               hover:shadow-lg active:bg-blue-800"
             >
               Send reset password
             </button>

@@ -1,6 +1,6 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-
+//as its sending out 2 variables
 export function useAuthStatus() {
   const [loggedIn, setLoggedIn] = useState(false);
   //   start checking process ui
