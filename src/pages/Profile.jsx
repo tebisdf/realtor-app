@@ -1,9 +1,10 @@
 import { getAuth, updateProfile } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {db} from "../firebase";
+import { db } from "../firebase";
+import { FcHome } from "react-icons/fc";
 export default function Profile() {
   const auth = getAuth();
   const navigate = useNavigate();
@@ -24,17 +25,17 @@ export default function Profile() {
     navigate("/");
   }
 
-  async function onSubmit(){
+  async function onSubmit() {
     try {
-      if(auth.currentUser.displayName!==name){
+      if (auth.currentUser.displayName !== name) {
         //update name in the firebase auth
-        await updateProfile(auth.currentUser,{
-          displayName:name
+        await updateProfile(auth.currentUser, {
+          displayName: name,
         });
         //update name in the fire-store
-        const docRef = doc(db,"users",auth.currentUser.uid)
-        await updateDoc(docRef,{name})
-        toast.success("Profile Details updated")
+        const docRef = doc(db, "users", auth.currentUser.uid);
+        await updateDoc(docRef, { name });
+        toast.success("Profile Details updated");
       }
     } catch (error) {
       toast.error("Could not update the profile detail");
@@ -45,7 +46,7 @@ export default function Profile() {
     <>
       <section className="max-w-3xl mx-auto flex justify-center items-center flex-col">
         <h1 className="text-3xl text-center font-bold mt-6">My profile</h1>
-        <div className="w-full md:[50%] mt-6">
+        <div className="w-full md:[50%] mt-6 px-3">
           <form>
             {/* name  input  */}
             <input
@@ -56,7 +57,9 @@ export default function Profile() {
               onChange={onChange}
               className={`mb-6 w-full px-4 py-2 text-xl
                text-gray-700 bg-white border
-                border-gray-300 rounded transition ease-in-out ${changeDetail&&`bg-red-200 focus:bg-red-200`}`}
+                border-gray-300 rounded transition ease-in-out ${
+                  changeDetail && `bg-red-200 focus:bg-red-200`
+                }`}
             />
             {/* email input */}
             <input
@@ -89,6 +92,19 @@ export default function Profile() {
               </p>
             </div>
           </form>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white uppercase px-7 py-3 font-medium rounded shadow-md hover:bg-blue-700 
+          transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800"
+          >
+            <Link
+              to="/create-listing"
+              className="flex justify-center items-center"
+            >
+              <FcHome className="mr-2 text-3xl bg-red-200 rounded-full p-1 border-2" />
+              Sell or Rent your home
+            </Link>
+          </button>
         </div>
       </section>
     </>
