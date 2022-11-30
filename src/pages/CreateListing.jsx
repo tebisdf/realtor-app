@@ -11,9 +11,11 @@ import { getAuth } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateListing() {
   const auth = getAuth();
+  const navigate = useNavigate();
   const [geolocationEnable, setGeolocationEnable] = useState(false);
   const [formData, setFormData] = useState({
     type: "rent",
@@ -165,6 +167,7 @@ export default function CreateListing() {
       imgUrls: imgUrls,
       geolocation,
       timestamp: serverTimestamp(),
+      userRef: auth.currentUser.uid,
     };
     delete formDataCopy.images;
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
@@ -172,6 +175,7 @@ export default function CreateListing() {
     const docRef = await addDoc(collection(db, "listings"), formDataCopy);
     setLoading(false);
     toast.success("Listing Created successfully");
+    navigate(`/category/${formData.type}/${docRef.id}`);
   }
 
   if (loading) {
