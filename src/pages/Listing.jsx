@@ -3,6 +3,14 @@ import { React, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Spinner from "../components/Spinner";
 import { db } from "../firebase";
+import {
+  FaMapMarkerAlt,
+  FaBed,
+  FaBath,
+  FaParking,
+  FaChair,
+} from "react-icons/fa";
+import { useIntl } from "react-intl";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, {
   EffectFade,
@@ -12,7 +20,9 @@ import SwiperCore, {
 } from "swiper";
 import "swiper/css/bundle";
 import { FaShare } from "react-icons/fa";
+import { list } from "firebase/storage";
 export default function Listing() {
+  const intl = useIntl();
   const param = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -70,11 +80,70 @@ export default function Listing() {
         <FaShare className="text-lg text-slate-500" />
       </div>
       {shareLinkCopied && (
-        <p className="fixed top-[23%] right-[5%] font-semibold border-2 border-gray-400 
-        rounded-md bg-white z-10 p-2">
+        <p
+          className="fixed top-[23%] right-[5%] font-semibold border-2 border-gray-400 
+        rounded-md bg-white z-10 p-2"
+        >
           Link copied
         </p>
       )}
+      <div
+        className="flex flex-col md:flex-row max-w-6xl m-4 lg:mx-auto
+        p-4 rounded-lg lg:space-x-5 shadow-lg bg-white"
+      >
+        <div className="  w-full h-[200px] lg-[400px]">
+          <p className="text-2xl font-bold mb-3 text-blue-900">
+            {listing.name} {" - "}
+            {intl.formatNumber(
+              listing.offer ? listing.discountedPrice : listing.regularPrice,
+              { currency: "USD", style: "currency" }
+            )}
+            {listing.type === "rent" ? " / month" : ""}
+          </p>
+          <p className="flex items-center mb-3 mt-6 font-semibold">
+            <FaMapMarkerAlt className="text-green-700 mr-1" /> {listing.address}
+          </p>
+          <div className="flex justify-start space-x-4 w-[75%] item-center">
+            <p className="bg-red-800 w-full max-w-[200px] rounded-md p-1 text-white text-center font-semibold shadow-md  ">
+              {listing.type === "rent" ? "Rent" : "Sale"}
+            </p>
+            <p className="bg-green-800 w-full max-w-[200px] rounded-md p-1 text-white text-center font-semibold shadow-md ">
+              {listing.offer && (
+                <p>
+                  {intl.formatNumber(
+                    listing.regularPrice - listing.discountedPrice,
+                    { currency: "USD", style: "currency" }
+                  )}{" "}
+                  discount
+                </p>
+              )}
+            </p>
+          </div>
+          <p className="my-3">
+            <span className="font-semibold">Description -</span>
+            {listing.description}
+          </p>
+          <ul className="flex items-center space-x-2 lg:space-x-10 text-sm font-semibold">
+            <li className="flex items-center whitespace-nowrap">
+              <FaBed className="text-lg mr-1" />
+              {`${listing.bedrooms} Bed${listing.bedrooms > 1 ? "s" : ""}`}
+            </li>
+            <li className="flex items-center whitespace-nowrap">
+              <FaBath className="text-lg mr-1" />
+              {`${listing.bathrooms} Bath${listing.bathrooms > 1 ? "s" : ""}`}
+            </li>
+            <li className="flex items-center whitespace-nowrap">
+              <FaParking className="text-lg mr-1" />
+              {` ${listing.packing ? "Parking spot" : "No parking"}`}
+            </li>
+            <li className="flex items-center whitespace-nowrap">
+              <FaChair className="text-lg mr-1" />
+              {`park${listing.furnished ? "Furnished" : "Not Furnished"}`}
+            </li>
+          </ul>
+        </div>
+        <div className="bg-blue-300 w-full h-[200px] lg-[400px] z-10 overflow-x-hidden hidden"></div>
+      </div>
     </div>
   );
 }
