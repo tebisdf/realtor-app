@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { db } from "../firebase";
 import { FcHome } from "react-icons/fc";
 import ListingItem from "../components/ListingItem";
+
 export default function Profile() {
   const auth = getAuth();
   const navigate = useNavigate();
