@@ -24,7 +24,7 @@ export default function EditListing() {
   const auth = getAuth();
   const navigate = useNavigate();
   const [geolocationEnable, setGeolocationEnable] = useState(false);
-  const [listing,setListing] = useState(null);
+  const [listing, setListing] = useState(null);
   const [formData, setFormData] = useState({
     type: "rent",
     name: "",
@@ -49,6 +49,7 @@ export default function EditListing() {
       const docRef = doc(db, "listings", params.listingId);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
+        setListing(docSnap.data());
         setFormData({ ...docSnap.data() });
         setLoading(false);
       } else {
@@ -58,14 +59,14 @@ export default function EditListing() {
     }
     fetchListing();
   }, [params, navigate, auth]);
-    useEffect(() => {
-      console.log(formData.userRef);
-      console.log(auth.currentUser.uid);
-      if (formData && formData.userRef !== auth.currentUser.uid) {
-        toast.error("You can't edit this listing");
-        navigate("/");
-      }
-    }, []);
+  useEffect(() => {
+    // console.log(formData.userRef);
+    console.log(auth.currentUser.uid);
+    if (listing && listing.userRef !== auth.currentUser.uid) {
+      toast.error("You can't edit this listing");
+      navigate("/");
+    }
+  }, [navigate, listing, auth,]);
   const [loading, setLoading] = useState(false);
   //destructuring
   const {
