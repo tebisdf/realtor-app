@@ -22,6 +22,7 @@ import SwiperCore, {
 import "swiper/css/bundle";
 import { FaShare } from "react-icons/fa";
 import Contact from "../components/Contact";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 export default function Listing() {
   const auth = getAuth();
   const intl = useIntl();
@@ -161,7 +162,34 @@ export default function Listing() {
             <Contact listing={listing} userRef={listing.userRef} />
           )}
         </div>
-        <div className="bg-blue-300 w-full h-[200px] lg-[400px] z-10 overflow-x-hidden "></div>
+        <div className="  w-full md:h-[400px] h-[200px] z-10 overflow-x-hidden mt-6 lg:mt-0 md:ml-2 ">
+          <MapContainer
+            center={[
+              // listing?.geolocation.lat ?? 0,
+              // listing?.geolocation.lat ?? 0,
+              4.092440026644071, 9.746377110608071
+            ]}
+            zoom={13}
+            scrollWheelZoom={false}
+            style={{ height: "100%", width: "100%" }}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker
+              position={[
+                // listing?.geolocation.lat ?? 0,
+                // listing?.geolocation.lng ?? 0,
+                4.092440026644071, 9.746377110608071
+              ]}
+            >
+              <Popup>
+                A pretty CSS3 popup. <br /> Easily customizable.
+              </Popup>
+            </Marker>
+          </MapContainer>
+        </div>
       </div>
     </div>
   );
