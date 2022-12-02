@@ -92,7 +92,7 @@ export default function CreateListing() {
       const response = await fetch(
         `http://address?key=${address}&key1=${process.env.REACT_APP_GEOCODE_API_KEY}`
       );
-      const data = await response.json;
+      const data = response.json;
       geolocation.lat = data.result[0]?.geometry.location.lat ?? 0;
       geolocation.lng = data.result[0]?.geometry.location.lng ?? 0;
 
@@ -137,9 +137,7 @@ export default function CreateListing() {
               case "storage/canceled":
                 // User canceled the upload
                 break;
-
               // ...
-
               case "storage/unknown":
                 // Unknown error occurred, inspect error.serverResponse
                 break;
@@ -171,7 +169,6 @@ export default function CreateListing() {
     };
     delete formDataCopy.images;
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
-    console.log(formDataCopy);
     const docRef = await addDoc(collection(db, "listings"), formDataCopy);
     setLoading(false);
     toast.success("Listing Created successfully");
@@ -181,6 +178,10 @@ export default function CreateListing() {
   if (loading) {
     return <Spinner />;
   }
+  const testing =
+    "w-full px-4 py-2 text-xl text-gray-700 bg-white border  " +
+    "              border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white    " +
+    "            focus:border-slate-600 text-center";
   return (
     <main className="max-w-md px-2 mx-auto">
       <h1 className="text-3xl text-center mt-6 font-bold">Create a listing</h1>
@@ -444,9 +445,7 @@ export default function CreateListing() {
                   min="50"
                   max="40000000"
                   required={offer}
-                  className="w-full px-4 py-2 text-xl text-gray-700 bg-white border
-                border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white
-                focus:border-slate-600 text-center"
+                  className={testing}
                 />
                 {type === "rent" && (
                   <div className="">

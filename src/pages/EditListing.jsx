@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from "react";
-import Spinner from "../components/Spinner";
-import { toast } from "react-toastify";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
 import { getAuth } from "firebase/auth";
-import { v4 as uuidv4 } from "uuid";
 import {
-  addDoc,
-  collection,
   doc,
   getDoc,
   serverTimestamp,
-  updateDoc,
+  updateDoc
 } from "firebase/firestore";
-import { db } from "../firebase";
+import {
+  getDownloadURL, getStorage,
+  ref,
+  uploadBytesResumable
+} from "firebase/storage";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
+import Spinner from "../components/Spinner";
+import { db } from "../firebase";
 
 export default function EditListing() {
   const auth = getAuth();
@@ -58,7 +55,7 @@ export default function EditListing() {
       }
     }
     fetchListing();
-  }, [params, navigate, auth]);
+  }, [params, navigate]);
   useEffect(() => {
     // console.log(formData.userRef);
     console.log(auth.currentUser.uid);
@@ -205,7 +202,6 @@ export default function EditListing() {
     };
     delete formDataCopy.images;
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
-    console.log(formDataCopy);
     const docRef = doc(db, "listings", params.listingId);
     await updateDoc(docRef, formDataCopy);
     setLoading(false);

@@ -6,13 +6,12 @@ import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 export default function OAuth() {
-  const provider = new GoogleAuthProvider();
   const navigate = useNavigate();
   async function onGoogleClick() {
     try {
       const auth = getAuth();
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, new GoogleAuthProvider());
       const user = result.user;
       //check for the user
       const docRef = doc(db, "users", user.uid);

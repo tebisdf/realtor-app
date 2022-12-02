@@ -6,12 +6,11 @@ import {
   useIntl,
 } from "react-intl";
 export default function Home() {
-
   const intl = useIntl();
   return (
     <div className="container mt">
       {/* ... */}
-      
+
       <FormattedDate value={Date.now()} />
       <br />
       <FormattedNumber value={2000} />

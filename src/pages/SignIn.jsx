@@ -23,16 +23,15 @@ export default function SignIn() {
   }
   //to authenticate user
   async function onSubmit(e) {
-   e.preventDefault();
-   try {
-     const auth = getAuth();
-     const credentials = await signInWithEmailAndPassword(
-       auth,
-       email,
-       password
-       );
-       
-       console.log(credentials.user)
+    e.preventDefault();
+    try {
+      const auth = getAuth();
+      const credentials = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log(credentials.user);
       if (credentials.user) {
         navigate("/");
       }

@@ -3,6 +3,7 @@ import { React, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Spinner from "../components/Spinner";
 import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
 import {
   FaMapMarkerAlt,
   FaBed,
@@ -20,13 +21,15 @@ import SwiperCore, {
 } from "swiper";
 import "swiper/css/bundle";
 import { FaShare } from "react-icons/fa";
-import { list } from "firebase/storage";
+import Contact from "../components/Contact";
 export default function Listing() {
+  const auth = getAuth();
   const intl = useIntl();
   const param = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [shareLinkCopied, setShareLinkCopied] = useState(false);
+  const [contactLandLord, setContactLandLoad] = useState(false);
   SwiperCore.use([Autoplay, Navigation, Pagination]);
   useEffect(() => {
     async function fetchListing() {
@@ -39,7 +42,7 @@ export default function Listing() {
       }
     }
     fetchListing();
-  }, [param.listingId]);
+  }, [param.listingId]); //its the listener of the function
 
   if (loading) {
     return <Spinner />;
@@ -91,7 +94,7 @@ export default function Listing() {
         className="flex flex-col md:flex-row max-w-6xl m-4 lg:mx-auto
         p-4 rounded-lg lg:space-x-5 shadow-lg bg-white"
       >
-        <div className="  w-full h-[200px] lg-[400px]">
+        <div className="  w-full ">
           <p className="text-2xl font-bold mb-3 text-blue-900">
             {listing.name} {" - "}
             {intl.formatNumber(
@@ -109,13 +112,13 @@ export default function Listing() {
             </p>
             <p className="bg-green-800 w-full max-w-[200px] rounded-md p-1 text-white text-center font-semibold shadow-md ">
               {listing.offer && (
-                <p>
+                <>
                   {intl.formatNumber(
                     listing.regularPrice - listing.discountedPrice,
                     { currency: "USD", style: "currency" }
                   )}{" "}
                   discount
-                </p>
+                </>
               )}
             </p>
           </div>
@@ -123,7 +126,7 @@ export default function Listing() {
             <span className="font-semibold">Description -</span>
             {listing.description}
           </p>
-          <ul className="flex items-center space-x-2 lg:space-x-10 text-sm font-semibold">
+          <ul className="flex items-center space-x-2 lg:space-x-10 text-sm font-semibold mb-6 ">
             <li className="flex items-center whitespace-nowrap">
               <FaBed className="text-lg mr-1" />
               {`${listing.bedrooms} Bed${listing.bedrooms > 1 ? "s" : ""}`}
@@ -138,11 +141,27 @@ export default function Listing() {
             </li>
             <li className="flex items-center whitespace-nowrap">
               <FaChair className="text-lg mr-1" />
-              {`park${listing.furnished ? "Furnished" : "Not Furnished"}`}
+              {` ${listing.furnished ? " Furnished" : " Not furnished"}`}
             </li>
           </ul>
+          {/* {(auth.currentUser !== null) && (listing.userRef !== auth.currentUser?.uid) && ( */}
+          {listing.userRef !== auth.currentUser?.uid && !contactLandLord && (
+            <div className="mt-6">
+              <button
+                onClick={() => setContactLandLoad(true)}
+                className="px-7  py-3 bg-blue-600 text-white font-medium text-sm uppercase
+                            rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 
+                         focus:shadow-lg w-full text-center transition duration-150 ease-in-out"
+              >
+                Contact Landlord
+              </button>
+            </div>
+          )}
+          {contactLandLord && (
+            <Contact listing={listing} userRef={listing.userRef} />
+          )}
         </div>
-        <div className="bg-blue-300 w-full h-[200px] lg-[400px] z-10 overflow-x-hidden hidden"></div>
+        <div className="bg-blue-300 w-full h-[200px] lg-[400px] z-10 overflow-x-hidden "></div>
       </div>
     </div>
   );
